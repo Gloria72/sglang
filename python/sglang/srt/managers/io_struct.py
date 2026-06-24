@@ -45,8 +45,6 @@ from typing import (
 import msgspec
 import numpy as np
 import torch
-import zmq
-import zmq.asyncio
 from pydantic import PlainValidator
 from pydantic_core import core_schema
 from zmq import Socket
@@ -65,7 +63,6 @@ from sglang.srt.utils.field_validators import validate_optional_list_i64_1d_2d
 if TYPE_CHECKING:
     from PIL.Image import Image
 
-    from sglang.srt.managers.tokenizer_manager import SenderWrapper
 else:
     Image = Any
 

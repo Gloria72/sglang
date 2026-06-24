@@ -173,9 +173,7 @@ def _make_batch_token_id_output(
         cached_tokens_details=None,
         dp_ranks=[0] * batch_size,
         time_stats=(
-            wrap_as_pickle(
-                [_scheduler_time_stats() for _ in range(batch_size)]
-            )
+            wrap_as_pickle([_scheduler_time_stats() for _ in range(batch_size)])
             if include_time_stats
             else None
         ),
@@ -220,9 +218,7 @@ def _make_batch_str_output(
         cached_tokens_details=None,
         dp_ranks=[0] * batch_size,
         time_stats=(
-            wrap_as_pickle(
-                [_scheduler_time_stats() for _ in range(batch_size)]
-            )
+            wrap_as_pickle([_scheduler_time_stats() for _ in range(batch_size)])
             if include_time_stats
             else None
         ),
@@ -234,9 +230,7 @@ def _make_batch_str_output(
 
 def make_payloads(args: argparse.Namespace) -> OrderedDict[str, Any]:
     tokenized_reqs = [
-        _make_tokenized_req(
-            i, args.input_len, args.output_len, args.include_time_stats
-        )
+        _make_tokenized_req(i, args.input_len, args.output_len, args.include_time_stats)
         for i in range(args.batch_size)
     ]
     return OrderedDict(
