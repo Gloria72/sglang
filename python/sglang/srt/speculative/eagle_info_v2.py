@@ -14,6 +14,7 @@ from sglang.srt.mem_cache.kv_cache_utils import (
 from sglang.srt.mem_cache.owned_kv import (
     alloc_paged_token_slots_extend,
     alloc_token_slots,
+    set_kv_allocated_len,
 )
 from sglang.srt.speculative.triton_ops.cache_locs import (
     assign_extend_cache_locs_func as assign_extend_cache_locs_func,
@@ -57,7 +58,7 @@ class EagleDraftInputV2Mixin:
             cur_kv_lens[i] = cur
             nxt_kv_lens[i] = nxt
             num_needed_tokens += nxt - cur
-            r.kv.kv_allocated_len = nxt
+            set_kv_allocated_len(r, nxt)
             r.decode_batch_idx += 1
 
         cur_kv_lens_cpu = torch.tensor(cur_kv_lens, dtype=torch.int32, device="cpu")

@@ -13,6 +13,7 @@ from sglang.srt.mem_cache.kv_cache_utils import get_last_loc
 from sglang.srt.mem_cache.owned_kv import (
     alloc_paged_token_slots_extend,
     alloc_token_slots,
+    set_kv_allocated_len,
 )
 from sglang.srt.server_args import get_global_server_args
 from sglang.srt.speculative.spec_info import SpecInput, SpecInputType
@@ -270,8 +271,8 @@ class DFlashDraftInputV2(SpecInput):
         # This request-side high-water mark is what release_kv_cache() uses to
         # reclaim any DFLASH over-allocation if the request finishes later.
         for i, req in enumerate(batch.reqs):
-            req.kv.kv_allocated_len = max(
-                req.kv.kv_allocated_len, int(nxt_kv_lens_cpu_t[i])
+            set_kv_allocated_len(
+                req, max(req.kv.kv_allocated_len, int(nxt_kv_lens_cpu_t[i]))
             )
 
         # Preserve the lagging committed CPU view on the batch and carry the

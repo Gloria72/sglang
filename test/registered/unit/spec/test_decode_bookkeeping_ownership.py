@@ -56,17 +56,15 @@ _OWNER_SITES = {
     ("mem_cache/owned_kv.py", "alloc_for_extend", "kv_allocated_len"): 1,
     ("mem_cache/owned_kv.py", "alloc_for_decode", "evict"): 1,
     ("mem_cache/owned_kv.py", "alloc_for_decode", "kv_allocated_len"): 1,
+    # spec v2 draft decode (eagle + dflash) settles its kv_allocated_len
+    # high-water mark through the owned-kv setter set_kv_allocated_len (op28);
+    # the spec modules derive the value but no longer write req.kv directly.
+    ("mem_cache/owned_kv.py", "set_kv_allocated_len", "kv_allocated_len"): 1,
     # spec v2: no pre-claim; resolve commits the full accepted run uniformly.
     (*_MIXIN, "decode_batch_idx"): 1,
     (*_MIXIN, "evict"): 1,
-    (*_MIXIN, "kv_allocated_len"): 1,
     (*_RESOLVE, "kv_committed_len"): 1,
     (*_RESOLVE, "spec_verify_ct"): 1,
-    (
-        "speculative/dflash_info_v2.py",
-        "DFlashDraftInputV2.prepare_for_decode",
-        "kv_allocated_len",
-    ): 1,
     # disaggregation decode prealloc
     (
         "disaggregation/decode.py",

@@ -421,6 +421,10 @@ def init_decode_prealloc_kv(req: Req, fill_len: int) -> None:
         req.kv.kv_allocated_len = fill_len
 
 
+def set_kv_allocated_len(req: Req, kv_allocated_len: int) -> None:
+    req.kv.kv_allocated_len = kv_allocated_len
+
+
 def alloc_for_decode_prealloc(
     allocator: BaseTokenToKVPoolAllocator,
     *,
