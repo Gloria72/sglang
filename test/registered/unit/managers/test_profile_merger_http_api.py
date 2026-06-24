@@ -7,13 +7,14 @@ from sglang.test.ci.ci_register import (
     register_cpu_ci,
     register_cuda_ci,
 )
+from sglang.test.test_utils import CustomTestCase
 
 register_cuda_ci(est_time=8, stage="base-b", runner_config="1-gpu-small")
 register_amd_ci(est_time=9, suite="stage-b-test-1-gpu-small-amd")
 register_cpu_ci(est_time=8, suite="base-c-test-cpu")
 
 
-class TestProfileMergerHTTPAPI(unittest.TestCase):
+class TestProfileMergerHTTPAPI(CustomTestCase):
     def test_profile_req_merge_profiles_json_serialization(self):
         # Test with merge_profiles=True
         req = ProfileReq(

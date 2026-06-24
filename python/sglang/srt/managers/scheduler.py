@@ -4072,7 +4072,9 @@ class Scheduler(
             # Radix-native: open is implicit; explicit open only permits id reuse.
             session_id = recv_req.session_id
             self.tree_cache.register_session(session_id)
-            output = OpenSessionReqOutput(session_id, session_id is not None)
+            output = OpenSessionReqOutput(
+                session_id=session_id, success=session_id is not None
+            )
         else:
             output = self.session_controller.open(recv_req)
         if self.ps.pp_rank == 0 and self.ps.tp_rank == 0 and self.ps.attn_cp_rank == 0:

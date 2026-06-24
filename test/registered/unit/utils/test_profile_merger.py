@@ -20,13 +20,14 @@ from sglang.test.ci.ci_register import (
     register_cpu_ci,
     register_cuda_ci,
 )
+from sglang.test.test_utils import CustomTestCase
 
 register_cuda_ci(est_time=9, stage="base-b", runner_config="1-gpu-small")
 register_amd_ci(est_time=8, suite="stage-b-test-1-gpu-small-amd")
 register_cpu_ci(est_time=8, suite="base-c-test-cpu")
 
 
-class TestProfileMerger(unittest.TestCase):
+class TestProfileMerger(CustomTestCase):
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
         self.profile_id = "test_profile_123"
@@ -205,7 +206,7 @@ class TestProfileMerger(unittest.TestCase):
             empty_merger.merge_chrome_traces()
 
 
-class TestProfileMergerIntegration(unittest.TestCase):
+class TestProfileMergerIntegration(CustomTestCase):
 
     def test_data_structures_merge_profiles(self):
         # Test ProfileReq
@@ -243,7 +244,7 @@ class TestProfileMergerIntegration(unittest.TestCase):
         self.assertIn("merge_profiles", sig.parameters)
 
 
-class TestProfileMergerEdgeCases(unittest.TestCase):
+class TestProfileMergerEdgeCases(CustomTestCase):
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
         self.profile_id = "test_edge_cases"
