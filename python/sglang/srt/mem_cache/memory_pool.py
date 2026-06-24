@@ -290,7 +290,7 @@ class ReqToTokenPool:
         return [r.req_pool_idx for r in reqs]
 
     def reserve_mamba_slots(
-        self, num_reqs: int, tree_cache: Optional["BasePrefixCache"]
+        self, num_reqs: int, tree_cache: Optional[BasePrefixCache]
     ) -> None:
         pass
 
@@ -754,7 +754,7 @@ class HybridReqToTokenPool(ReqToTokenPool):
         self.layer_transfer_counter = layer_transfer_counter
 
     def reserve_mamba_slots(
-        self, num_reqs: int, tree_cache: Optional["BasePrefixCache"]
+        self, num_reqs: int, tree_cache: Optional[BasePrefixCache]
     ) -> None:
         from sglang.srt.mem_cache.base_prefix_cache import EvictParams
         from sglang.srt.mem_cache.kv_cache_utils import (

@@ -84,12 +84,12 @@ from sglang.srt.mem_cache.base_prefix_cache import (
     zero_match_result,
 )
 from sglang.srt.mem_cache.common import release_kv_cache
-from sglang.srt.mem_cache.kv_cache_utils import get_alloc_reserve_per_decode
-from sglang.srt.mem_cache.memory_pool import ReqToTokenPool
 from sglang.srt.mem_cache.eviction import (
     CacheFreeSpaceProvider,
     evict_from_tree_cache,
 )
+from sglang.srt.mem_cache.kv_cache_utils import get_alloc_reserve_per_decode
+from sglang.srt.mem_cache.memory_pool import ReqToTokenPool
 from sglang.srt.mem_cache.owned_kv import (
     alloc_for_decode,
     alloc_for_extend,
@@ -666,8 +666,6 @@ class ReqLogprob:
         None
     )
     output_token_ids_logprobs_idx: Optional[list] = None
-
-
 
 
 class Req(ReqDllmMixin):

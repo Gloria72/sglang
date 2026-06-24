@@ -8,8 +8,8 @@ import torch
 
 from sglang.srt.environ import envs
 from sglang.srt.managers.schedule_batch import ScheduleBatch
-from sglang.srt.mem_cache.kv_cache_utils import get_last_loc
 from sglang.srt.mem_cache.eviction import CacheFreeSpaceProvider
+from sglang.srt.mem_cache.kv_cache_utils import get_last_loc
 from sglang.srt.mem_cache.owned_kv import (
     alloc_paged_token_slots_extend,
     alloc_token_slots,

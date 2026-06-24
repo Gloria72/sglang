@@ -73,7 +73,9 @@ def test_full_swa_cache_does_not_reference_mamba(path: Path):
         for name in _names_and_attrs(tree)
         if name == "mamba" or name.startswith("mamba_")
     }
-    assert not mamba_ids, f"{path.name} references mamba identifiers: {sorted(mamba_ids)}"
+    assert (
+        not mamba_ids
+    ), f"{path.name} references mamba identifiers: {sorted(mamba_ids)}"
 
 
 if __name__ == "__main__":
