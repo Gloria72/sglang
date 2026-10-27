@@ -57,6 +57,48 @@ class TestBenchServingGoodput(CustomTestCase):
                 with self.assertRaises(argparse.ArgumentTypeError):
                     _goodput_slo(entry)
 
+    def test_unmeasured_ttft_does_not_meet_token_latency_slos(self):
+        output = _output(ttft=0.0, latency=2.0, output_len=3)
+        for slos in [{"ttft": 100}, {"tpot": 1500}, {"ttft": 100, "tpot": 1500}]:
+            with self.subTest(slos=slos):
+                goodput = calculate_goodput([output], slos, DURATION_S)
+                self.assertEqual(goodput.request_goodput, 0.0)
+                self.assertEqual(goodput.slo_attainment, 0.0)
+                self.assertEqual(
+                    goodput.slo_attainment_by_metric, dict.fromkeys(slos, 0.0)
+                )
+
+    def test_unmeasured_ttft_preserves_e2el_and_request_denominator(self):
+        outputs = [
+            _output(ttft=0.1, latency=0.9, output_len=9),
+            _output(ttft=0.0, latency=0.9, output_len=9),
+            _output(ttft=0.0, latency=0.0, output_len=0, success=False),
+        ]
+        for slos, num_good in [
+            ({"e2el": 1000}, 2),
+            ({"ttft": 300, "tpot": 150, "e2el": 1000}, 1),
+        ]:
+            with self.subTest(slos=slos):
+                goodput = calculate_goodput(outputs, slos, DURATION_S)
+                self.assertEqual(goodput.request_goodput, num_good / DURATION_S)
+                self.assertEqual(goodput.slo_attainment, num_good / len(outputs))
+                expected = {"ttft": 1 / 3, "tpot": 1 / 3, "e2el": 2 / 3}
+                self.assertEqual(
+                    goodput.slo_attainment_by_metric,
+                    {name: expected[name] for name in slos},
+                )
+
+    def test_zero_tpot_can_still_meet_slo(self):
+        outputs = [
+            _output(ttft=0.0, latency=0.2, output_len=0),
+            _output(ttft=0.0, latency=0.2, output_len=1),
+            _output(ttft=0.2, latency=0.2, output_len=3),
+        ]
+        goodput = calculate_goodput(outputs, {"tpot": 1}, DURATION_S)
+        self.assertEqual(goodput.request_goodput, len(outputs) / DURATION_S)
+        self.assertEqual(goodput.slo_attainment, 1.0)
+        self.assertEqual(goodput.slo_attainment_by_metric, {"tpot": 1.0})
+
 
 if __name__ == "__main__":
     unittest.main()

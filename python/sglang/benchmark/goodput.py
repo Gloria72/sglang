@@ -33,12 +33,22 @@ def calculate_goodput(
         tpot = 0.0
         if output.output_len > 1:
             tpot = (output.latency - output.ttft) / (output.output_len - 1)
-        observed_ms = {
+        observed_ms: dict[str, float | None] = {
             "ttft": output.ttft * 1000,
             "tpot": tpot * 1000,
             "e2el": output.latency * 1000,
         }
-        met = [name for name, slo in goodput_slos.items() if observed_ms[name] <= slo]
+        # Zero TTFT is the default when no first-token timestamp was recorded.
+        # Neither TTFT nor multi-token TPOT can be measured in that case.
+        if output.ttft <= 0:
+            observed_ms["ttft"] = None
+            if output.output_len > 1:
+                observed_ms["tpot"] = None
+        met = [
+            name
+            for name, slo in goodput_slos.items()
+            if observed_ms[name] is not None and observed_ms[name] <= slo
+        ]
         for name in met:
             num_met[name] += 1
         if len(met) == len(goodput_slos):
